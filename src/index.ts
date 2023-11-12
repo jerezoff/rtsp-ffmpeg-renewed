@@ -18,6 +18,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
     private fps: number = 10
     private resolution: string | undefined
     private quality: number
+    private format: string
 
     private args: string[]
     private debug: boolean
@@ -40,6 +41,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
             resolution?: string | undefined
             cmd?: string,
             debug?: boolean,
+            format?: string,
             args?: string[]
         }) {
         super()
@@ -60,6 +62,12 @@ export default class RtspFFmpegRenewed extends EventEmitter {
 
         if (settings.fps) {
             this.fps = settings.fps
+        }
+
+        if(settings.format) {
+            this.format = settings.format
+        } else {
+            this.format = 'image2'
         }
 
         if (settings.resolution) {
@@ -86,9 +94,9 @@ export default class RtspFFmpegRenewed extends EventEmitter {
             this.debug ? [] : ['-loglevel', 'quiet'],
             this.resolution ? ['-s', this.resolution] : [],
             this.quality ? ['-q:v', this.quality.toString()] : [],
+            ['-f', this.format],
             this.args,
             [
-                '-f', 'image2',
                 '-update', '1',
                 '-'
             ]
