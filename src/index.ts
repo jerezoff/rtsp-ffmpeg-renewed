@@ -9,28 +9,34 @@ export interface Listener<T> {
 * This package represents wrapper around ffmpeg lib
 * and spawns process which parsing the output
 * You can provide settings to adjust output
-* 
-* @param url Is important parameter, fullfill with rtsp stream
-* @param settings You can adjust settings here
-* @param settings.fps Preffered output fps
-* @param settings.resolution Preffered output resolution
-* @param settings.cmd Custom ffmpeg call e.g. if you got ENOENT error
-* @param settings.args Custom args for ffmpeg, provide with ['-flag', 'value'] syntax
 */
 export default class RtspFFmpegRenewed extends EventEmitter {
     private cmd: string = 'ffmpeg';
     private ffProcess: ChildProcess | undefined
-    private args: string[]
+
     private url: string
     private fps: number = 10
-    private buffs: Buffer[] = []
     private resolution: string | undefined
+    private args: string[]
+    private debug: boolean
 
+    private buffs: Buffer[] = []
+
+    /**
+    * @param {string} url Is important parameter, fullfill with rtsp stream
+    * @param {Object} settings You can adjust settings here
+    * @param {number} settings.fps Preffered output fps
+    * @param {string} settings.resolution Preffered output resolution
+    * @param {string} settings.cmd Custom ffmpeg call e.g. if you got ENOENT error
+    * @param {string[]} settings.args Custom args for ffmpeg, provide with ['-flag', 'value'] syntax
+    * @param {boolean} settings.debug Enables ffmpeg logging
+    */
     constructor(url: string, settings?:
         {
             fps?: number,
             resolution?: string | undefined
             cmd?: string,
+            debug?: boolean,
             args?: string[]
         }) {
         super()
@@ -44,6 +50,10 @@ export default class RtspFFmpegRenewed extends EventEmitter {
         }
 
         this.url = url
+
+        if (settings.debug) {
+            this.debug = settings.debug
+        }
 
         if (settings.fps) {
             this.fps = settings.fps
@@ -63,12 +73,12 @@ export default class RtspFFmpegRenewed extends EventEmitter {
     private generateArgs() {
         return this.args.concat(
             this.args,
+            this.debug ? [] : ['-loglevel', 'quiet'],
+            this.resolution ? ['-s', this.resolution] : [],
             [
-                '-loglevel', 'quiet',
                 '-i', this.url,
                 '-r', this.fps.toString()
             ],
-            this.resolution ? ['-s', this.resolution] : [],
             [
                 '-f', 'image2',
                 '-update', '1',
@@ -115,6 +125,8 @@ export default class RtspFFmpegRenewed extends EventEmitter {
                 setTimeout(() => {
                     this.start();
                 }, 1000)
+            } else {
+                throw new Error(`Process exited with code ${code}${!this.debug && ", try enable debug setting"}`)
             }
         })
 
@@ -125,7 +137,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
             throw err
         })
 
-        this.emit('started')
+        this.emit('start')
     }
 
     /**
@@ -138,7 +150,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
             this.ffProcess.kill()
         }
         delete this.ffProcess
-        this.emit('stopped')
+        this.emit('stop')
     }
 
     /**
@@ -149,6 +161,6 @@ export default class RtspFFmpegRenewed extends EventEmitter {
     public restart(): void {
         this.stop()
         this.start()
-        this.emit('restarted')
+        this.emit('restart')
     }
 }

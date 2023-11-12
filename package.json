@@ -1,6 +1,6 @@
 {
   "name": "rtsp-ffmpeg-renewed",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "rtsp-ffmpeg wrapper",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
