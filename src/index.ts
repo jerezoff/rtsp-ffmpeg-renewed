@@ -19,6 +19,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
     private resolution: string | undefined
     private quality: number
     private format: string
+    private outPath: string
 
     private args: string[]
     private debug: boolean
@@ -29,6 +30,8 @@ export default class RtspFFmpegRenewed extends EventEmitter {
     * @param {string} url Is important parameter, fullfill with rtsp stream
     * @param {Object} settings You can adjust settings here
     * @param {number} settings.fps Preffered output fps
+    * @param {number} settings.quality Quality of the stream
+    * @param {string} settings.outPath Path for the output
     * @param {string} settings.resolution Preffered output resolution
     * @param {string} settings.cmd Custom ffmpeg call e.g. if you got ENOENT error
     * @param {string[]} settings.args Custom args for ffmpeg, provide with ['-flag', 'value'] syntax
@@ -42,6 +45,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
             cmd?: string,
             debug?: boolean,
             format?: string,
+            outPath?: string
             args?: string[]
         }) {
         super()
@@ -74,6 +78,12 @@ export default class RtspFFmpegRenewed extends EventEmitter {
             this.resolution = settings.resolution
         }
 
+        if(settings.outPath) {
+            this.outPath = settings.outPath
+        } else {
+            this.outPath = '-'
+        }
+
         if(settings.quality) {
            this.quality = settings.quality 
         }
@@ -98,7 +108,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
             this.args,
             [
                 '-update', '1',
-                '-'
+                this.outPath
             ]
         )
     }
