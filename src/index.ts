@@ -5,21 +5,19 @@ export interface Listener<T> {
     (event: T): any;
 }
 
-export default class RFR extends EventEmitter {
-    /**
-     * This class represents a module that wraps ffmpeg
-     * and spawns process which parsing the output
-     * 
-     * Also you can provide settings to adjust
-     * 
-     * @param url Is important parameter, fullfill with rtsp stream
-     * @param settings You can adjust module here
-     * @param settings.fps Preffered output fps
-     * @param settings.resolution Preffered output resolution
-     * @param settings.cmd Custom ffmpeg call e.g. if you got ENOENT error
-     * @param settings.args Custom args for ffmpeg, provide with ['-flag', 'value'] syntax
-     */
-
+/**
+* This package represents wrapper around ffmpeg lib
+* and spawns process which parsing the output
+* You can provide settings to adjust output
+* 
+* @param url Is important parameter, fullfill with rtsp stream
+* @param settings You can adjust settings here
+* @param settings.fps Preffered output fps
+* @param settings.resolution Preffered output resolution
+* @param settings.cmd Custom ffmpeg call e.g. if you got ENOENT error
+* @param settings.args Custom args for ffmpeg, provide with ['-flag', 'value'] syntax
+*/
+export default class RtspFFmpegRenewed extends EventEmitter {
     private cmd: string = 'ffmpeg';
     private ffProcess: ChildProcess | undefined
     private args: string[]
@@ -83,10 +81,12 @@ export default class RFR extends EventEmitter {
         return !!this.ffProcess
     }
 
+    /**
+     * Starts ffmpeg process
+     * 
+     * @returns {void}
+     */
     public start(): void {
-        /**
-         * Starts ffmpeg process
-         */
         this.ffProcess = spawn(this.cmd, this.generateArgs())
 
         if (!this.ffProcess.stdout || !this.ffProcess.stderr) {
@@ -128,10 +128,12 @@ export default class RFR extends EventEmitter {
         this.emit('started')
     }
 
+    /**
+     * Stops ffmpeg process
+     * 
+     * @returns {void}
+     */
     public stop(): void {
-        /**
-         * Stops ffmpeg process
-         */
         if (this.ffProcess) {
             this.ffProcess.kill()
         }
@@ -139,10 +141,12 @@ export default class RFR extends EventEmitter {
         this.emit('stopped')
     }
 
+    /**
+    * Restarts ffmpeg process
+    * 
+    * @returns {void}
+    */
     public restart(): void {
-        /**
-         * Restarts ffmpeg process
-         */
         this.stop()
         this.start()
         this.emit('restarted')
