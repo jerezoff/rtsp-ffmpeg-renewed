@@ -1,9 +1,13 @@
 {
   "name": "rtsp-ffmpeg-renewed",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "rtsp-ffmpeg wrapper",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jerezoff/rtsp-ffmpeg-renewed.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
