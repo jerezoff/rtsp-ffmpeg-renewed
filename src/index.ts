@@ -86,6 +86,10 @@ export default class RtspFFmpegRenewed extends EventEmitter {
         )
     }
 
+    /**
+     * Shows status of the ffmpeg process
+     * @returns {boolean}
+     */
     public isRunning(): boolean {
         return !!this.ffProcess
     }
