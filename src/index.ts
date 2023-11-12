@@ -5,7 +5,7 @@ export interface Listener<T> {
     (event: T): any;
 }
 
-export class FFMpegRenewed extends EventEmitter {
+export default class RFR extends EventEmitter {
     /**
      * This class represents a module that wraps ffmpeg
      * and spawns process which parsing the output
@@ -70,7 +70,7 @@ export class FFMpegRenewed extends EventEmitter {
                 '-i', this.url,
                 '-r', this.fps.toString()
             ],
-            this.resolution && ['-s', this.resolution],
+            this.resolution ? ['-s', this.resolution] : [],
             [
                 '-f', 'image2',
                 '-update', '1',
