@@ -116,7 +116,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
         })
 
         this.ffProcess.stderr.on('data', (data) => {
-            throw new Error(data)
+            throw new Error(`${data} arguments: "${this.generateArgs()}"`)
         })
 
         this.ffProcess.on('close', (code) => {
@@ -125,7 +125,7 @@ export default class RtspFFmpegRenewed extends EventEmitter {
                     this.start();
                 }, 1000)
             } else {
-                throw new Error(`Process exited with code ${code}${!this.debug && ", try enable debug setting"}`)
+                throw new Error(`Process exited with code ${code}${!this.debug && ", try enable debug setting"} arguments: "${this.generateArgs()}"`)
             }
         })
 
