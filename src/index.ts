@@ -13,12 +13,15 @@ export class FFMpegRenewed extends EventEmitter {
     private url: string
     private fps: number = 10
     private buffs: Buffer[] = []
+    private resolution: string | undefined
 
     constructor(settings:
         {
-            cmd?: string,
             fps?: number,
+            resolution: string
+
             url: string,
+            cmd?: string,
             args?: string[]
         }) {
         super()
@@ -37,6 +40,10 @@ export class FFMpegRenewed extends EventEmitter {
             this.fps = settings.fps
         }
 
+        if (settings.resolution) {
+            this.resolution = settings.resolution
+        }
+
         if (!settings.args) {
             this.args = []
         } else {
@@ -52,6 +59,7 @@ export class FFMpegRenewed extends EventEmitter {
                 '-i', this.url,
                 '-r', this.fps.toString()
             ],
+                this.resolution && ['-s', this.resolution],
             [
                 '-f', 'image2',
                 '-update', '1',
