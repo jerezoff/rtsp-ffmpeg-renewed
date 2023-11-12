@@ -72,7 +72,6 @@ export default class RtspFFmpegRenewed extends EventEmitter {
 
     private generateArgs() {
         return this.args.concat(
-            this.args,
             this.debug ? [] : ['-loglevel', 'quiet'],
             this.resolution ? ['-s', this.resolution] : [],
             [
