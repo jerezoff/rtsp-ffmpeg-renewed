@@ -147,14 +147,18 @@ export default class RtspFFmpegRenewed extends EventEmitter {
         })
 
         this.ffProcess.on('close', (code) => {
-            if (code === 0) {
-                setTimeout(() => {
-                    this.start();
-                }, 1000)
-            } else {
-                throw new Error(`Process exited with code ${code}${!this.debug && ", try enable debug setting"} arguments: "${this.generateArgs()}"`)
+            switch(code) {
+                case 0:
+                    setTimeout(() => {
+                        this.start();
+                    }, 1000);
+                    break;
+                case 255:
+                    break;
+                default:
+                    throw new Error(`Process exited with code ${code}${!this.debug && ", try enable debug setting"} arguments: "${this.generateArgs()}"`);
             }
-        })
+        });
 
         this.ffProcess.on('error', (err) => {
             if (err.name === 'ENOENT') {
