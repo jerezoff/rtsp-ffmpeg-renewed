@@ -18,11 +18,11 @@ export default class RtspFFmpegRenewed extends EventEmitter {
     private fps: number = 10
     private resolution: string | undefined
     private quality: number
-    private format: string
-    private outPath: string
+    private format: string = 'image2'
+    private outPath: string = '-'
 
-    private args: string[]
-    private debug: boolean
+    private args: string[] = []
+    private debug: boolean = false
 
     private buffs: Buffer[] = []
 
@@ -50,48 +50,44 @@ export default class RtspFFmpegRenewed extends EventEmitter {
         }) {
         super()
 
-        if (settings.cmd) {
-            this.cmd = settings.cmd
-        }
-
         if (!url || url.trim() === '') {
             throw new Error('invalid url')
         }
 
         this.url = url
 
-        if (settings.debug) {
-            this.debug = settings.debug
-        }
-
-        if (settings.fps) {
-            this.fps = settings.fps
-        }
-
-        if(settings.format) {
-            this.format = settings.format
-        } else {
-            this.format = 'image2'
-        }
-
-        if (settings.resolution) {
-            this.resolution = settings.resolution
-        }
-
-        if(settings.outPath) {
-            this.outPath = settings.outPath
-        } else {
-            this.outPath = '-'
-        }
-
-        if(settings.quality) {
-           this.quality = settings.quality 
-        }
-
-        if (!settings.args) {
-            this.args = []
-        } else {
-            this.args = settings.args
+        if(settings) {
+            if (settings.cmd) {
+                this.cmd = settings.cmd
+            }
+    
+            if (settings.debug) {
+                this.debug = settings.debug
+            }
+    
+            if (settings.fps) {
+                this.fps = settings.fps
+            }
+    
+            if (settings.format) {
+                this.format = settings.format
+            }
+    
+            if (settings.resolution) {
+                this.resolution = settings.resolution
+            }
+    
+            if (settings.outPath) {
+                this.outPath = settings.outPath
+            }
+    
+            if (settings.quality) {
+               this.quality = settings.quality 
+            }
+    
+            if (settings.args) { 
+                this.args = settings.args
+            }
         }
     }
 
