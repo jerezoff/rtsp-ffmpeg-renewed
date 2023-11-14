@@ -10,20 +10,20 @@ export interface Listener<T> {
 * and spawns process which parsing the output
 * You can provide settings to adjust output
 */
-export default class RtspFFmpegRenewed extends EventEmitter {
-    private cmd: string = 'ffmpeg';
+export class RFR extends EventEmitter {
+    private readonly cmd: string = 'ffmpeg';
+
+    private readonly url: string
+    private readonly fps: number = 10
+    private readonly resolution: string | undefined
+    private readonly quality: number
+    private readonly format: string = 'image2'
+    private readonly outPath: string = '-'
+
+    private readonly args: string[] = []
+    private readonly debug: boolean = false
+
     private ffProcess: ChildProcess | undefined
-
-    private url: string
-    private fps: number = 10
-    private resolution: string | undefined
-    private quality: number
-    private format: string = 'image2'
-    private outPath: string = '-'
-
-    private args: string[] = []
-    private debug: boolean = false
-
     private buffs: Buffer[] = []
 
     /**
