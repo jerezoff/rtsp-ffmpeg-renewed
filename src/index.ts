@@ -1,10 +1,6 @@
 import { ChildProcess, spawn } from 'child_process'
 import { EventEmitter } from 'stream';
 
-export interface Listener<T> {
-    (event: T): any;
-}
-
 /**
 * This package represents wrapper around ffmpeg lib
 * and spawns process which parsing the output
